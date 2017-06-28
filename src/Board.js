@@ -3,15 +3,15 @@ import {
   View,
   TouchableHighlight,
   Button,
-  Text
+  Text,
+  Alert
 } from 'react-native';
 import styles from './Style';
-// import Square from './Square';
 
 let Square = (props) => {
   return (
     <TouchableHighlight 
-      style={styles.square} 
+      style={props.styles} 
       underlayColor="#1E88E5"
       onPress={() => props.onClick()}>
 
@@ -44,11 +44,12 @@ class Board extends Component {
     });
   }
 
-  renderSquare(i) {
+  renderSquare(i, style) {
     return (
       <Square 
         value={this.state.squares[i]}
-        onClick={() => this.handleClick(i)} />
+        onClick={() => this.handleClick(i)}
+        styles={style} />
     );
   }
 
@@ -57,30 +58,50 @@ class Board extends Component {
     let status;
 
     if (winner) {
-      status = 'Winner: '+ winner;
+      Alert.alert(
+        'Permainan Selesai',
+        winner +' menang',
+        [
+          { text: 'OK', onPress: () => this.setState({squares: Array(9).fill(null)}) }
+        ],
+        { cancelable: false }
+      )
+
+      status = winner +' menang';
     } else {
       status = 'Next player : '+(this.state.xIsNext ? 'X': 'O');
     }
+    /*else if (squares.every(!null)) {
+      Alert.alert(
+        'Permainan Selesai',
+        'Hasil seri',
+        [
+          { text: 'OK', onPress: () => this.setState({squares: Array(9).fill(null)}) }
+        ]
+      )
+    }*/
 
     return(
       <View style={{flex: 1}}>
-        <Text style={{marginTop: 20, marginBottom: 8}}>{status}</Text>
         <View style={styles.board}>
           <View style={styles.squareRow}>
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
+            {this.renderSquare(0, [styles.square, styles.rightBorder, styles.bottomBorder])}
+            {this.renderSquare(1, [styles.square, styles.rightBorder])}
+            {this.renderSquare(2, [styles.square, styles.rightBorder, styles.topBorder])}
           </View>
           <View style={styles.squareRow}>
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
+            {this.renderSquare(3, [styles.square, styles.bottomBorder])}
+            {this.renderSquare(4, [styles.square])}
+            {this.renderSquare(5, [styles.square, styles.topBorder])}
           </View>
           <View style={styles.squareRow}>
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
+            {this.renderSquare(6, [styles.square, styles.leftBorder, styles.bottomBorder])}
+            {this.renderSquare(7, [styles.square, styles.leftBorder])}
+            {this.renderSquare(8, [styles.square, styles.leftBorder, styles.topBorder])}
           </View>
+        </View>
+        <View style={styles.footer}>
+          <Text style={styles.status}>{status}</Text>
         </View>
       </View>
     );
