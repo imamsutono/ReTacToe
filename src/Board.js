@@ -8,16 +8,8 @@ import {
 } from 'react-native';
 import styles from './Style';
 
-let Square = (props) => {
-  return (
-    <TouchableHighlight 
-      style={props.styles} 
-      underlayColor="#1E88E5"
-      onPress={() => props.onClick()}>
-
-      <Text style={styles.squareText}>{props.value}</Text>
-    </TouchableHighlight>
-  );
+function checkAllSquare(element) {
+  return element != null;
 }
 
 class Board extends Component {
@@ -26,6 +18,7 @@ class Board extends Component {
 
     this.state = {
       squares: Array(9).fill(null),
+      squareIndex: null,
       xIsNext: true
     }
   }
@@ -40,16 +33,20 @@ class Board extends Component {
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       squares: squares,
+      squareIndex: i,
       xIsNext: !this.state.xIsNext
     });
   }
 
   renderSquare(i, style) {
     return (
-      <Square 
-        value={this.state.squares[i]}
-        onClick={() => this.handleClick(i)}
-        styles={style} />
+      <TouchableHighlight 
+        style={style} 
+        underlayColor="#1E88E5"
+        onPress={() => this.handleClick(i)}>
+
+        <Text style={styles.squareText}>{this.state.squares[i]}</Text>
+      </TouchableHighlight>
     );
   }
 
@@ -68,18 +65,19 @@ class Board extends Component {
       )
 
       status = winner +' menang';
-    } else {
-      status = 'Next player : '+(this.state.xIsNext ? 'X': 'O');
-    }
-    /*else if (squares.every(!null)) {
+    } else if (!winner && this.state.squares.every(checkAllSquare)) {
       Alert.alert(
         'Permainan Selesai',
-        'Hasil seri',
+        'Hasil Seri',
         [
           { text: 'OK', onPress: () => this.setState({squares: Array(9).fill(null)}) }
         ]
       )
-    }*/
+
+      status = 'hasil seri';
+    } else {
+      status = 'Next player : '+(this.state.xIsNext ? 'X': 'O');
+    }
 
     return(
       <View style={{flex: 1}}>
@@ -102,6 +100,11 @@ class Board extends Component {
         </View>
         <View style={styles.footer}>
           <Text style={styles.status}>{status}</Text>
+          <View style={{ alignItems: 'flex-end', flex: 2 }}>
+            <Button 
+              title="reset"
+              onPress={() => this.setState({squares: Array(9).fill(null)} )} />
+          </View>
         </View>
       </View>
     );

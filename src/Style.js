@@ -60,11 +60,11 @@ const styles = StyleSheet.create({
     color: '#e1f5fe'
   },
   footer: {
+    flexDirection: 'row',
     backgroundColor: '#E1E2E1',
     padding: 16
   },
   status: {
-    textAlign: 'center',
     color: '#212121',
     fontSize: 20
   }
