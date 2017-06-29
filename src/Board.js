@@ -4,6 +4,7 @@ import {
   TouchableHighlight,
   Button,
   Text,
+  Animated,
   Alert
 } from 'react-native';
 import styles from './Style';
@@ -21,6 +22,19 @@ class Board extends Component {
       squareIndex: null,
       xIsNext: true
     }
+
+    this.springValue = new Animated.Value(0.3)
+  }
+
+  spring() {
+    this.springValue.setValue(0.3)
+    Animated.spring(
+      this.springValue,
+      {
+        toValue: 1,
+        friction: 2
+      }
+    ).start()
   }
 
   handleClick(i) {
@@ -36,6 +50,8 @@ class Board extends Component {
       squareIndex: i,
       xIsNext: !this.state.xIsNext
     });
+
+    this.spring()
   }
 
   renderSquare(i, style) {
@@ -45,7 +61,10 @@ class Board extends Component {
         underlayColor="#1E88E5"
         onPress={() => this.handleClick(i)}>
 
-        <Text style={styles.squareText}>{this.state.squares[i]}</Text>
+        <Animated.Text
+          style={{fontSize: 48, fontWeight: '100', color: '#e1f5fe', transform: [{scale: this.springValue}] }}>
+          {this.state.squares[i]}
+        </Animated.Text>
       </TouchableHighlight>
     );
   }
