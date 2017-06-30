@@ -121,7 +121,7 @@ class Board extends Component {
           <Text style={styles.status}>{status}</Text>
           <View style={{ alignItems: 'flex-end', flex: 2 }}>
             <Button 
-              title="reset"
+              title="RESET"
               onPress={() => this.setState({squares: Array(9).fill(null)} )} />
           </View>
         </View>
